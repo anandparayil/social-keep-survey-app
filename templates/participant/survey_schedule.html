@@ -1,0 +1,201 @@
+{% extends "base.html" %}
+
+{% block title %}Survey Schedule - Social Keep{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h1 class="card-title">
+                <i class="fas fa-calendar-check"></i> Survey Schedule
+            </h1>
+        </div>
+        
+        {% if schedules %}
+        <div class="schedule-timeline">
+            {% for schedule in schedules %}
+            <div class="schedule-item">
+                <div class="schedule-date">
+                    <div class="date-circle">
+                        <span class="date-day">{{ schedule.scheduled_date.strftime('%d') }}</span>
+                        <span class="date-month">{{ schedule.scheduled_date.strftime('%b') }}</span>
+                    </div>
+                </div>
+                <div class="schedule-content">
+                    <h3 class="schedule-title">{{ schedule.survey_name }}</h3>
+                    <div class="schedule-meta">
+                        <span class="badge badge-info">{{ schedule.survey_type.title() }}</span>
+                        <span class="schedule-time">
+                            <i class="fas fa-clock"></i> {{ schedule.scheduled_date.strftime('%H:%M') }}
+                        </span>
+                    </div>
+                    <div class="schedule-countdown" data-schedule-time="{{ schedule.scheduled_date.isoformat() }}">
+                        <i class="fas fa-hourglass-half"></i>
+                        <span class="countdown-text">Calculating...</span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="fas fa-calendar-alt empty-icon"></i>
+            <h3>No Scheduled Surveys</h3>
+            <p>There are no surveys scheduled at this time.</p>
+        </div>
+        {% endif %}
+        
+        <div class="card-actions">
+            <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+.schedule-timeline {
+    position: relative;
+    padding-left: 30px;
+}
+
+.schedule-timeline::before {
+    content: '';
+    position: absolute;
+    left: 25px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #e9ecef;
+}
+
+.schedule-item {
+    display: flex;
+    margin-bottom: 30px;
+    position: relative;
+}
+
+.schedule-date {
+    margin-right: 20px;
+    flex-shrink: 0;
+}
+
+.date-circle {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    position: relative;
+    z-index: 1;
+}
+
+.date-day {
+    font-size: 1.2rem;
+    line-height: 1;
+}
+
+.date-month {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+}
+
+.schedule-content {
+    flex: 1;
+    background: #f8f9fa;
+    border-radius: 15px;
+    padding: 20px;
+    border-left: 4px solid #667eea;
+}
+
+.schedule-title {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.schedule-meta {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 10px;
+}
+
+.schedule-time {
+    color: #666;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.schedule-countdown {
+    color: #667eea;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+@media (max-width: 768px) {
+    .schedule-timeline {
+        padding-left: 20px;
+    }
+    
+    .schedule-timeline::before {
+        left: 15px;
+    }
+    
+    .date-circle {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .date-day {
+        font-size: 1rem;
+    }
+    
+    .schedule-content {
+        padding: 15px;
+    }
+}
+</style>
+
+<script>
+function updateScheduleCountdowns() {
+    const countdownElements = document.querySelectorAll('.schedule-countdown');
+    
+    countdownElements.forEach(element => {
+        const scheduleTime = new Date(element.dataset.scheduleTime);
+        const now = new Date();
+        const diff = scheduleTime - now;
+        
+        const countdownText = element.querySelector('.countdown-text');
+        
+        if (diff <= 0) {
+            countdownText.textContent = 'Survey should be available now!';
+            element.style.color = '#28a745';
+        } else {
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            
+            let timeString = 'Starts in ';
+            if (days > 0) timeString += `${days} day${days > 1 ? 's' : ''} `;
+            if (hours > 0) timeString += `${hours} hour${hours > 1 ? 's' : ''} `;
+            if (days === 0) timeString += `${minutes} minute${minutes > 1 ? 's' : ''}`;
+            
+            countdownText.textContent = timeString;
+        }
+    });
+}
+
+setInterval(updateScheduleCountdowns, 60000);
+document.addEventListener('DOMContentLoaded', updateScheduleCountdowns);
+</script>
+{% endblock %}

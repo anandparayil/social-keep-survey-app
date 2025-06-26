@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+
+{% block title %}Payout Details - Social Keep{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h1 class="card-title">
+                <i class="fas fa-coins"></i> Payout Details
+            </h1>
+        </div>
+        
+        <div class="wallet-summary">
+            <div class="wallet-card">
+                <div class="wallet-icon">
+                    <i class="fas fa-wallet"></i>
+                </div>
+                <div class="wallet-info">
+                    <h2 class="wallet-balance">{{ total_tokens }}</h2>
+                    <p class="wallet-label">Total Tokens Earned</p>
+                </div>
+            </div>
+        </div>
+        
+        {% if payouts %}
+        <div class="payout-history">
+            <h3 class="section-title">
+                <i class="fas fa-history"></i> Payout History
+            </h3>
+            
+            <div class="table-container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Survey Name</th>
+                            <th>Tokens Earned</th>
+                            <th>Date Earned</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for payout in payouts %}
+                        <tr>
+                            <td>
+                                <div class="survey-info">
+                                    <strong>{{ payout.survey_name }}</strong>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="token-amount">
+                                    <i class="fas fa-coins"></i> {{ payout.tokens_earned }}
+                                </span>
+                            </td>
+                            <td>{{ payout.earned_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                            <td>
+                                <span class="badge badge-success">Credited</span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="fas fa-coins empty-icon"></i>
+            <h3>No Payouts Yet</h3>
+            <p>Complete surveys with rewards to start earning tokens!</p>
+            <a href="{{ url_for('available_surveys') }}" class="btn btn-primary">
+                <i class="fas fa-clipboard-list"></i> Take Surveys
+            </a>
+        </div>
+        {% endif %}
+        
+        <div class="card-actions">
+            <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+.wallet-summary {
+    margin-bottom: 40px;
+}
+
+.wallet-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 20px;
+    padding: 40px;
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+}
+
+.wallet-icon {
+    font-size: 3rem;
+    opacity: 0.9;
+}
+
+.wallet-balance {
+    font-size: 3rem;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.wallet-label {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    margin: 0;
+}
+
+.payout-history {
+    margin-bottom: 30px;
+}
+
+.section-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.token-amount {
+    color: #28a745;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.survey-info strong {
+    color: #333;
+}
+
+@media (max-width: 768px) {
+    .wallet-card {
+        flex-direction: column;
+        text-align: center;
+        padding: 30px 20px;
+    }
+    
+    .wallet-balance {
+        font-size: 2.5rem;
+    }
+}
+</style>
+{% endblock %}

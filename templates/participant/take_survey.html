@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}{{ survey.name }} - Social Keep{% endblock %}
+
+{% block content %}
+<div class="survey-container">
+    <div class="survey-header">
+        <h1 class="survey-title">{{ survey.name }}</h1>
+        <div class="survey-info">
+            <span class="badge badge-info">{{ survey.survey_type.title() }} Survey</span>
+            {% if survey.reward_tokens > 0 %}
+            <span class="badge badge-success">{{ survey.reward_tokens }} Tokens Reward</span>
+            {% endif %}
+            <p>Complete all questions and submit your responses</p>
+        </div>
+    </div>
+    
+    <form id="survey-response-form">
+        <input type="hidden" id="survey-id" value="{{ survey.id }}">
+        
+        {% for question in questions %}
+        <div class="survey-question" data-question-id="{{ question.id }}" data-question-type="{{ question.type }}">
+            <h3 class="question-title">
+                {{ loop.index }}. {{ question.text }}
+            </h3>
+            
+            {% if question.type == 'radio' %}
+            <div class="question-options">
+                {% for option in question.options %}
+                <div class="option-item">
+                    <input type="radio" id="q{{ question.id }}_{{ loop.index }}" 
+                           name="question_{{ question.id }}" value="{{ option }}">
+                    <label for="q{{ question.id }}_{{ loop.index }}">{{ option }}</label>
+                </div>
+                {% endfor %}
+            </div>
+            
+            {% elif question.type == 'checkbox' %}
+            <div class="question-options">
+                {% for option in question.options %}
+                <div class="option-item">
+                    <input type="checkbox" id="q{{ question.id }}_{{ loop.index }}" 
+                           name="question_{{ question.id }}" value="{{ option }}">
+                    <label for="q{{ question.id }}_{{ loop.index }}">{{ option }}</label>
+                </div>
+                {% endfor %}
+            </div>
+            
+            {% elif question.type == 'text' %}
+            <textarea class="text-response" name="question_{{ question.id }}" 
+                     placeholder="Enter your response here..."></textarea>
+            {% endif %}
+        </div>
+        {% endfor %}
+        
+        <div class="survey-actions">
+            <button type="button" class="btn btn-primary" onclick="submitSurvey()">
+                <i class="fas fa-paper-plane"></i> Submit Survey
+            </button>
+            <a href="{{ url_for('available_surveys') }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Surveys
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/survey.js') }}"></script>
+{% endblock %}

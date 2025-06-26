@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+
+{% block title %}Participant Dashboard - Social Keep{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <div class="welcome-section">
+        <h1 class="welcome-title">Participant Dashboard</h1>
+        <p class="welcome-message">Complete surveys, track rewards, and manage your participation</p>
+    </div>
+    
+    <div class="dashboard-grid">
+        <div class="dashboard-card">
+            <div class="dashboard-card-icon">
+                <i class="fas fa-clipboard-list"></i>
+            </div>
+            <h3 class="dashboard-card-title">Available Surveys</h3>
+            <p class="dashboard-card-description">
+                View and complete currently available surveys to earn rewards and contribute to research.
+            </p>
+            <div class="dashboard-card-action">
+                <a href="{{ url_for('available_surveys') }}" class="btn btn-primary">
+                    <i class="fas fa-play"></i> Take Surveys
+                </a>
+            </div>
+        </div>
+        
+        <div class="dashboard-card">
+            <div class="dashboard-card-icon">
+                <i class="fas fa-hourglass-half"></i>
+            </div>
+            <h3 class="dashboard-card-title">Upcoming Surveys</h3>
+            <p class="dashboard-card-description">
+                See what surveys are scheduled to become available soon and plan your participation.
+            </p>
+            <div class="dashboard-card-action">
+                <a href="{{ url_for('upcoming_surveys') }}" class="btn btn-primary">
+                    <i class="fas fa-calendar-alt"></i> View Upcoming
+                </a>
+            </div>
+        </div>
+        
+        <div class="dashboard-card">
+            <div class="dashboard-card-icon">
+                <i class="fas fa-calendar-check"></i>
+            </div>
+            <h3 class="dashboard-card-title">Survey Schedule</h3>
+            <p class="dashboard-card-description">
+                Check the complete schedule of surveys planned by administrators.
+            </p>
+            <div class="dashboard-card-action">
+                <a href="{{ url_for('participant_survey_schedule') }}" class="btn btn-primary">
+                    <i class="fas fa-calendar"></i> View Schedule
+                </a>
+            </div>
+        </div>
+        
+        <div class="dashboard-card">
+            <div class="dashboard-card-icon">
+                <i class="fas fa-coins"></i>
+            </div>
+            <h3 class="dashboard-card-title">Payout Details</h3>
+            <p class="dashboard-card-description">
+                Track your earned tokens, view payout history, and manage your rewards.
+            </p>
+            <div class="dashboard-card-action">
+                <a href="{{ url_for('payout_details') }}" class="btn btn-primary">
+                    <i class="fas fa-wallet"></i> View Payouts
+                </a>
+            </div>
+        </div>
+        
+        <div class="dashboard-card">
+            <div class="dashboard-card-icon">
+                <i class="fas fa-question-circle"></i>
+            </div>
+            <h3 class="dashboard-card-title">Help & Support</h3>
+            <p class="dashboard-card-description">
+                Get help with using the platform, find FAQs, and contact support if needed.
+            </p>
+            <div class="dashboard-card-action">
+                <a href="{{ url_for('help_page') }}" class="btn btn-primary">
+                    <i class="fas fa-life-ring"></i> Get Help
+                </a>
+            </div>
+        </div>
+        
+        <div class="dashboard-card">
+            <div class="dashboard-card-icon">
+                <i class="fas fa-key"></i>
+            </div>
+            <h3 class="dashboard-card-title">Reset Password</h3>
+            <p class="dashboard-card-description">
+                Change your account password anytime for security and account protection.
+            </p>
+            <div class="dashboard-card-action">
+                <a href="{{ url_for('reset_password') }}" class="btn btn-primary">
+                    <i class="fas fa-lock"></i> Change Password
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="quick-actions">
+        <h2 class="quick-actions-title">
+            <i class="fas fa-bolt"></i> Quick Actions
+        </h2>
+        <div class="quick-actions-grid">
+            <a href="{{ url_for('available_surveys') }}" class="quick-action-btn">
+                <i class="fas fa-clipboard-list"></i> Take Survey
+            </a>
+            <a href="{{ url_for('payout_details') }}" class="quick-action-btn">
+                <i class="fas fa-coins"></i> Check Rewards
+            </a>
+            <a href="{{ url_for('upcoming_surveys') }}" class="quick-action-btn">
+                <i class="fas fa-clock"></i> Upcoming
+            </a>
+            <a href="{{ url_for('help_page') }}" class="quick-action-btn">
+                <i class="fas fa-question"></i> Help
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

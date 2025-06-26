@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+
+{% block title %}Available Surveys - Social Keep{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h1 class="card-title">
+                <i class="fas fa-clipboard-list"></i> Available Surveys
+            </h1>
+        </div>
+        
+        {% if surveys %}
+        <div class="grid grid-2">
+            {% for survey in surveys %}
+            <div class="survey-card">
+                <div class="survey-header">
+                    <h3 class="survey-title">{{ survey.name }}</h3>
+                    <div class="survey-badges">
+                        <span class="badge badge-info">{{ survey.survey_type.title() }}</span>
+                        {% if survey.reward_tokens > 0 %}
+                        <span class="badge badge-success">{{ survey.reward_tokens }} Tokens</span>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="survey-info">
+                    <p><i class="fas fa-clock"></i> 
+                        <span data-end-time="{{ survey.end_time }}">
+                            Time remaining: {{ survey.end_time }}
+                        </span>
+                    </p>
+                    <p><i class="fas fa-calendar"></i> 
+                        Ends: {{ survey.end_time.strftime('%Y-%m-%d %H:%M') }}
+                    </p>
+                </div>
+                
+                <div class="survey-actions">
+                    {% if survey.completed %}
+                    <button class="btn btn-success" disabled>
+                        <i class="fas fa-check"></i> Completed
+                    </button>
+                    {% else %}
+                    <a href="{{ url_for('take_survey', survey_id=survey.id) }}" class="btn btn-primary">
+                        <i class="fas fa-play"></i> Take Survey
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="fas fa-clipboard-list empty-icon"></i>
+            <h3>No Available Surveys</h3>
+            <p>There are currently no surveys available for completion. Check back later or view upcoming surveys.</p>
+            <a href="{{ url_for('upcoming_surveys') }}" class="btn btn-outline">
+                <i class="fas fa-hourglass-half"></i> View Upcoming Surveys
+            </a>
+        </div>
+        {% endif %}
+        
+        <div class="card-actions">
+            <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+.survey-card {
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    border-left: 5px solid #667eea;
+}
+
+.survey-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.survey-header {
+    margin-bottom: 20px;
+}
+
+.survey-title {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.survey-badges {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.survey-info {
+    margin-bottom: 20px;
+    color: #666;
+}
+
+.survey-info p {
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.survey-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: #666;
+}
+
+.empty-icon {
+    font-size: 4rem;
+    color: #ddd;
+    margin-bottom: 20px;
+}
+
+.empty-state h3 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.card-actions {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+    text-align: center;
+}
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/survey.js') }}"></script>
+{% endblock %}

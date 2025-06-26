@@ -1,0 +1,329 @@
+{% extends "base.html" %}
+
+{% block title %}Help & Support - Social Keep{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h1 class="card-title">
+                <i class="fas fa-question-circle"></i> Help & Support
+            </h1>
+        </div>
+        
+        <div class="help-content">
+            <div class="faq-section">
+                <h2 class="section-title">
+                    <i class="fas fa-question"></i> Frequently Asked Questions
+                </h2>
+                
+                <div class="faq-list">
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <h3>How do I complete a survey?</h3>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>To complete a survey:</p>
+                            <ol>
+                                <li>Go to "Available Surveys" from your dashboard</li>
+                                <li>Click "Take Survey" on any available survey</li>
+                                <li>Answer all questions completely</li>
+                                <li>Click "Submit Survey" to complete</li>
+                            </ol>
+                            <p>Make sure to complete surveys before their deadline expires!</p>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <h3>How do I earn tokens?</h3>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>You earn tokens by completing surveys that offer rewards. Look for surveys with token badges in the "Available Surveys" section. Tokens are automatically added to your account upon survey completion.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <h3>What's the difference between daily and biweekly surveys?</h3>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Daily surveys are available for 24 hours from their start time, while biweekly surveys remain available for one full week. Make sure to complete them within their respective time limits.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <h3>Can I change my answers after submitting?</h3>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>No, once you submit a survey, your responses cannot be changed. Please review your answers carefully before submitting.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <h3>How do I reset my password?</h3>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>You can reset your password by going to "Reset Password" from your dashboard. You'll need to enter your current password and choose a new one.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="contact-section">
+                <h2 class="section-title">
+                    <i class="fas fa-envelope"></i> Contact Support
+                </h2>
+                
+                <div class="contact-info">
+                    <p>If you need additional help or have questions not covered in the FAQ, please contact our support team:</p>
+                    
+                    <div class="contact-methods">
+                        <div class="contact-method">
+                            <i class="fas fa-envelope"></i>
+                            <div>
+                                <strong>Email Support</strong>
+                                <p>keepsocial2@gmail.com</p>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-method">
+                            <i class="fas fa-clock"></i>
+                            <div>
+                                <strong>Response Time</strong>
+                                <p>We typically respond within 24 hours</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tips-section">
+                <h2 class="section-title">
+                    <i class="fas fa-lightbulb"></i> Tips for Success
+                </h2>
+                
+                <div class="tips-grid">
+                    <div class="tip-card">
+                        <i class="fas fa-clock"></i>
+                        <h3>Check Regularly</h3>
+                        <p>Visit your dashboard regularly to see new available surveys and don't miss deadlines.</p>
+                    </div>
+                    
+                    <div class="tip-card">
+                        <i class="fas fa-check-circle"></i>
+                        <h3>Complete Thoroughly</h3>
+                        <p>Answer all questions completely and honestly for the best research outcomes.</p>
+                    </div>
+                    
+                    <div class="tip-card">
+                        <i class="fas fa-calendar-alt"></i>
+                        <h3>Plan Ahead</h3>
+                        <p>Check upcoming surveys to plan when you'll have time to complete them.</p>
+                    </div>
+                    
+                    <div class="tip-card">
+                        <i class="fas fa-coins"></i>
+                        <h3>Track Rewards</h3>
+                        <p>Monitor your payout details to see your earned tokens and completion history.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card-actions">
+            <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+.help-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.section-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.faq-section {
+    margin-bottom: 50px;
+}
+
+.faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.faq-item {
+    border: 1px solid #e9ecef;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.faq-question {
+    background: #f8f9fa;
+    padding: 20px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background 0.3s ease;
+}
+
+.faq-question:hover {
+    background: #e9ecef;
+}
+
+.faq-question h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: #333;
+}
+
+.faq-answer {
+    padding: 20px;
+    background: white;
+    display: none;
+}
+
+.faq-answer.active {
+    display: block;
+}
+
+.faq-answer ol {
+    margin: 10px 0;
+    padding-left: 20px;
+}
+
+.faq-answer li {
+    margin-bottom: 5px;
+}
+
+.contact-section {
+    margin-bottom: 50px;
+}
+
+.contact-methods {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.contact-method {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 10px;
+}
+
+.contact-method i {
+    font-size: 1.5rem;
+    color: #667eea;
+}
+
+.contact-method strong {
+    display: block;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.contact-method p {
+    margin: 0;
+    color: #666;
+}
+
+.tips-section {
+    margin-bottom: 30px;
+}
+
+.tips-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.tip-card {
+    text-align: center;
+    padding: 25px;
+    background: #f8f9fa;
+    border-radius: 15px;
+    transition: transform 0.3s ease;
+}
+
+.tip-card:hover {
+    transform: translateY(-5px);
+}
+
+.tip-card i {
+    font-size: 2rem;
+    color: #667eea;
+    margin-bottom: 15px;
+}
+
+.tip-card h3 {
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.tip-card p {
+    color: #666;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const faqQuestions = document.querySelectorAll('.faq-question');
+    
+    faqQuestions.forEach(question => {
+        question.addEventListener('click', function() {
+            const answer = this.nextElementSibling;
+            const icon = this.querySelector('i');
+            
+            // Close all other answers
+            faqQuestions.forEach(otherQuestion => {
+                if (otherQuestion !== this) {
+                    const otherAnswer = otherQuestion.nextElementSibling;
+                    const otherIcon = otherQuestion.querySelector('i');
+                    otherAnswer.classList.remove('active');
+                    otherIcon.style.transform = 'rotate(0deg)';
+                }
+            });
+            
+            // Toggle current answer
+            answer.classList.toggle('active');
+            if (answer.classList.contains('active')) {
+                icon.style.transform = 'rotate(180deg)';
+            } else {
+                icon.style.transform = 'rotate(0deg)';
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

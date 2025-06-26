@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block title %}Track Activation - Social Keep{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h1 class="card-title">
+                <i class="fas fa-user-check"></i> Participant Activation Status
+            </h1>
+        </div>
+        
+        {% if participants %}
+        <div class="stats-summary">
+            <div class="stat-card">
+                <span class="stat-number">{{ participants|length }}</span>
+                <span class="stat-label">Total Participants</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">{{ participants|selectattr('is_activated')|list|length }}</span>
+                <span class="stat-label">Activated</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">{{ participants|rejectattr('is_activated')|list|length }}</span>
+                <span class="stat-label">Not Activated</span>
+            </div>
+        </div>
+        
+        <div class="table-container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Registration Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for participant in participants %}
+                    <tr>
+                        <td>
+                            <div class="user-info">
+                                <i class="fas fa-user"></i>
+                                <strong>{{ participant.username }}</strong>
+                            </div>
+                        </td>
+                        <td>{{ participant.email }}</td>
+                        <td>{{ participant.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                        <td>
+                            {% if participant.is_activated %}
+                            <span class="badge badge-success">
+                                <i class="fas fa-check"></i> Activated
+                            </span>
+                            {% else %}
+                            <span class="badge badge-warning">
+                                <i class="fas fa-clock"></i> Pending
+                            </span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="fas fa-users empty-icon"></i>
+            <h3>No Participants Yet</h3>
+            <p>No participants have registered on the platform yet.</p>
+        </div>
+        {% endif %}
+        
+        <div class="card-actions">
+            <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+.stats-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.user-info i {
+    color: #667eea;
+}
+</style>
+{% endblock %}

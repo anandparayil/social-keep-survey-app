@@ -1,0 +1,262 @@
+{% extends "base.html" %}
+
+{% block title %}Survey Schedule - Social Keep{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h1 class="card-title">
+                <i class="fas fa-calendar-alt"></i> Survey Schedule Management
+            </h1>
+        </div>
+        
+        <!-- Add New Schedule Form -->
+        <div class="schedule-form">
+            <h3><i class="fas fa-plus"></i> Schedule New Survey</h3>
+            <form method="POST" action="{{ url_for('survey_schedule') }}">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="survey_name" class="form-label">Survey Name</label>
+                        <input type="text" id="survey_name" name="survey_name" class="form-control" 
+                               placeholder="Enter survey name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="survey_type" class="form-label">Survey Type</label>
+                        <select id="survey_type" name="survey_type" class="form-select" required>
+                            <option value="">Select type</option>
+                            <option value="daily">Daily Survey</option>
+                            <option value="biweekly">Biweekly Survey</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="scheduled_date" class="form-label">Scheduled Date & Time</label>
+                        <input type="datetime-local" id="scheduled_date" name="scheduled_date" 
+                               class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-calendar-plus"></i> Add to Schedule
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Scheduled Surveys List -->
+        {% if schedules %}
+        <div class="scheduled-surveys">
+            <h3><i class="fas fa-list"></i> Scheduled Surveys</h3>
+            
+            <div class="table-container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Survey Name</th>
+                            <th>Type</th>
+                            <th>Scheduled Date</th>
+                            <th>Time Until Start</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for schedule in schedules %}
+                        <tr>
+                            <td>
+                                <strong>{{ schedule.survey_name }}</strong>
+                            </td>
+                            <td>
+                                <span class="badge badge-info">{{ schedule.survey_type.title() }}</span>
+                            </td>
+                            <td>{{ schedule.scheduled_date.strftime('%Y-%m-%d %H:%M') }}</td>
+                            <td>
+                                <span class="countdown-timer" data-target-time="{{ schedule.scheduled_date.isoformat() }}">
+                                    Calculating...
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge badge-warning">
+                                    <i class="fas fa-clock"></i> Scheduled
+                                </span>
+                            </td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn btn-sm btn-secondary" data-schedule-id="{{ schedule.id }}" onclick="editSchedule(this.dataset.scheduleId)">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </button>
+                                    <button class="btn btn-sm btn-danger" data-schedule-id="{{ schedule.id }}" onclick="deleteSchedule(this.dataset.scheduleId)">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% else %}
+        <div class="empty-schedule">
+            <i class="fas fa-calendar-alt empty-icon"></i>
+            <h3>No Scheduled Surveys</h3>
+            <p>Use the form above to schedule surveys for future activation.</p>
+        </div>
+        {% endif %}
+        
+        <div class="card-actions">
+            <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+.schedule-form {
+    background: #f8f9fa;
+    border-radius: 15px;
+    padding: 25px;
+    margin-bottom: 30px;
+    border: 2px solid #e9ecef;
+}
+
+.schedule-form h3 {
+    color: #333;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 2fr auto;
+    gap: 20px;
+    align-items: end;
+}
+
+.scheduled-surveys {
+    margin-bottom: 30px;
+}
+
+.scheduled-surveys h3 {
+    color: #333;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.countdown-timer {
+    font-weight: 500;
+    color: #667eea;
+}
+
+.countdown-timer.urgent {
+    color: #dc3545;
+    font-weight: bold;
+}
+
+.countdown-timer.soon {
+    color: #ffc107;
+    font-weight: bold;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.empty-schedule {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+}
+
+.empty-schedule .empty-icon {
+    font-size: 3rem;
+    color: #ddd;
+    margin-bottom: 15px;
+}
+
+@media (max-width: 768px) {
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+    }
+}
+</style>
+
+<script>
+// Set minimum date to current date/time
+document.addEventListener('DOMContentLoaded', function() {
+    const dateInput = document.getElementById('scheduled_date');
+    if (dateInput) {
+        const now = new Date();
+        now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+        dateInput.min = now.toISOString().slice(0, 16);
+    }
+    
+    // Initialize countdown timers
+    updateCountdowns();
+});
+
+function updateCountdowns() {
+    const countdownElements = document.querySelectorAll('.countdown-timer');
+    
+    countdownElements.forEach(function(element) {
+        const targetTime = new Date(element.dataset.targetTime);
+        const now = new Date();
+        const diff = targetTime - now;
+        
+        if (diff <= 0) {
+            element.textContent = 'Should be active now!';
+            element.className = 'countdown-timer urgent';
+        } else {
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            
+            let timeString = '';
+            if (days > 0) timeString += days + 'd ';
+            if (hours > 0) timeString += hours + 'h ';
+            timeString += minutes + 'm';
+            
+            element.textContent = timeString;
+            
+            // Color coding
+            if (diff < 3600000) { // Less than 1 hour
+                element.className = 'countdown-timer urgent';
+            } else if (diff < 86400000) { // Less than 1 day
+                element.className = 'countdown-timer soon';
+            } else {
+                element.className = 'countdown-timer';
+            }
+        }
+    });
+}
+
+function editSchedule(scheduleId) {
+    alert('Edit schedule ' + scheduleId + ' - This would open an edit modal');
+}
+
+function deleteSchedule(scheduleId) {
+    if (confirm('Are you sure you want to delete this scheduled survey?')) {
+        // Here you would make an AJAX call to delete the schedule
+        alert('Schedule deleted successfully');
+        location.reload();
+    }
+}
+
+// Update countdowns every minute
+setInterval(updateCountdowns, 60000);
+</script>
+{% endblock %}

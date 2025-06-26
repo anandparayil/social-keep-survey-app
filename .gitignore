@@ -1,0 +1,48 @@
+# Byte-compiled / cache
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+
+# Environment
+.env
+.venv/
+venv/
+env/
+ENV/
+
+# macOS
+.DS_Store
+
+# VS Code
+.vscode/
+
+# PyCharm
+.idea/
+
+# Logs and local db
+*.log
+*.sqlite3
+
+# System files
+Thumbs.db
+
+# Test outputs
+.coverage
+htmlcov/
+.pytest_cache/
+
+# PyInstaller
+dist/
+build/
+*.spec
+
+# Render deploy config
+*.render-build.sh
+
+# Secrets in config (optional if you're dynamically importing)
+config.py
+
+# node (in case you use JS build tools)
+node_modules/

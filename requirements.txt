@@ -1,0 +1,7 @@
+Flask==2.3.3
+pymysql==1.1.0
+Werkzeug==2.3.7
+flask_mail==0.9.1
+python-dotenv==1.0.0
+APScheduler==3.10.4
+cryptography==41.0.7

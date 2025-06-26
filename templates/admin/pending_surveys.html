@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+
+{% block title %}Pending Surveys - Social Keep{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h1 class="card-title">
+                <i class="fas fa-clock"></i> Pending Surveys Report
+            </h1>
+        </div>
+        
+        {% if pending %}
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle"></i>
+            Showing surveys that are currently active but not yet completed by participants.
+        </div>
+        
+        <div class="table-container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Participant</th>
+                        <th>Survey Name</th>
+                        <th>Survey Type</th>
+                        <th>Deadline</th>
+                        <th>Time Remaining</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in pending %}
+                    <tr>
+                        <td>
+                            <div class="user-info">
+                                <i class="fas fa-user"></i>
+                                <strong>{{ item.username }}</strong>
+                            </div>
+                        </td>
+                        <td>{{ item.survey_name }}</td>
+                        <td>
+                            <span class="badge badge-info">{{ item.survey_type.title() }}</span>
+                        </td>
+                        <td>{{ item.end_time.strftime('%Y-%m-%d %H:%M') }}</td>
+                        <td>
+                            <span class="time-remaining" data-end-time="{{ item.end_time.isoformat() }}">
+                                Calculating...
+                            </span>
+                        </td>
+                        <td>
+                            <span class="badge badge-warning">
+                                <i class="fas fa-hourglass-half"></i> Pending
+                            </span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="pending-stats">
+            <div class="stat-card">
+                <span class="stat-number">{{ pending|length }}</span>
+                <span class="stat-label">Total Pending</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">{{ pending|selectattr('survey_type', 'equalto', 'daily')|list|length }}</span>
+                <span class="stat-label">Daily Surveys</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">{{ pending|selectattr('survey_type', 'equalto', 'biweekly')|list|length }}</span>
+                <span class="stat-label">Biweekly Surveys</span>
+            </div>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="fas fa-check-circle empty-icon" style="color: #28a745;"></i>
+            <h3>All Surveys Completed!</h3>
+            <p>There are no pending surveys at this time. All participants have completed their assigned surveys.</p>
+        </div>
+        {% endif %}
+        
+        <div class="card-actions">
+            <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+            <a href="{{ url_for('survey_completion') }}" class="btn btn-primary">
+                <i class="fas fa-chart-line"></i> View Completions
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+.pending-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 20px;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+}
+
+.time-remaining {
+    font-weight: 500;
+}
+
+.time-remaining.urgent {
+    color: #dc3545;
+    font-weight: bold;
+}
+
+.time-remaining.warning {
+    color: #ffc107;
+    font-weight: bold;
+}
+</style>
+
+<script>
+function updateTimeRemaining() {
+    const timeElements = document.querySelectorAll('.time-remaining');
+    
+    timeElements.forEach(element => {
+        const endTime = new Date(element.dataset.endTime);
+        const now = new Date();
+        const diff = endTime - now;
+        
+        if (diff <= 0) {
+            element.textContent = 'Expired';
+            element.className = 'time-remaining urgent';
+        } else {
+            const hours = Math.floor(diff / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            
+            let timeString = '';
+            if (hours > 24) {
+                const days = Math.floor(hours / 24);
+                timeString = `${days} day${days > 1 ? 's' : ''}`;
+            } else if (hours > 0) {
+                timeString = `${hours}h ${minutes}m`;
+            } else {
+                timeString = `${minutes}m`;
+            }
+            
+            element.textContent = timeString;
+            
+            // Color coding based on urgency
+            if (hours < 2) {
+                element.className = 'time-remaining urgent';
+            } else if (hours < 6) {
+                element.className = 'time-remaining warning';
+            } else {
+                element.className = 'time-remaining';
+            }
+        }
+    });
+}
+
+setInterval(updateTimeRemaining, 60000);
+document.addEventListener('DOMContentLoaded', updateTimeRemaining);
+</script>
+{% endblock %}

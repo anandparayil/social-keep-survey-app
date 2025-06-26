@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+{% block title %}Upcoming Surveys - Social Keep{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h1 class="card-title">
+                <i class="fas fa-hourglass-half"></i> Upcoming Surveys
+            </h1>
+        </div>
+        
+        {% if surveys %}
+        <div class="grid grid-2">
+            {% for survey in surveys %}
+            <div class="survey-card upcoming">
+                <div class="survey-header">
+                    <h3 class="survey-title">{{ survey.name }}</h3>
+                    <div class="survey-badges">
+                        <span class="badge badge-warning">{{ survey.survey_type.title() }}</span>
+                        {% if survey.reward_tokens > 0 %}
+                        <span class="badge badge-success">{{ survey.reward_tokens }} Tokens</span>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="survey-info">
+                    <p><i class="fas fa-calendar-alt"></i> 
+                        Starts: {{ survey.start_time.strftime('%Y-%m-%d %H:%M') }}
+                    </p>
+                    <p><i class="fas fa-clock"></i> 
+                        Duration: {% if survey.survey_type == 'daily' %}24 hours{% else %}1 week{% endif %}
+                    </p>
+                    <p><i class="fas fa-hourglass-start"></i> 
+                        Status: <span class="badge badge-info">Upcoming</span>
+                    </p>
+                </div>
+                
+                <div class="countdown-timer" data-start-time="{{ survey.start_time.isoformat() }}">
+                    <div class="countdown-display">
+                        <span class="countdown-label">Starts in:</span>
+                        <span class="countdown-time">Calculating...</span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="fas fa-hourglass-half empty-icon"></i>
+            <h3>No Upcoming Surveys</h3>
+            <p>There are no surveys scheduled to start soon. Check back later or view available surveys.</p>
+            <a href="{{ url_for('available_surveys') }}" class="btn btn-primary">
+                <i class="fas fa-clipboard-list"></i> View Available Surveys
+            </a>
+        </div>
+        {% endif %}
+        
+        <div class="card-actions">
+            <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+.survey-card.upcoming {
+    border-left: 5px solid #ffc107;
+}
+
+.countdown-timer {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 15px;
+    margin-top: 15px;
+    text-align: center;
+}
+
+.countdown-label {
+    display: block;
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+.countdown-time {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #ffc107;
+}
+</style>
+
+<script>
+function updateCountdowns() {
+    const countdownElements = document.querySelectorAll('.countdown-timer');
+    
+    countdownElements.forEach(element => {
+        const startTime = new Date(element.dataset.startTime);
+        const now = new Date();
+        const diff = startTime - now;
+        
+        const timeDisplay = element.querySelector('.countdown-time');
+        
+        if (diff <= 0) {
+            timeDisplay.textContent = 'Starting now!';
+            timeDisplay.style.color = '#28a745';
+            // Refresh page to move to available surveys
+            setTimeout(() => location.reload(), 2000);
+        } else {
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            
+            let timeString = '';
+            if (days > 0) timeString += `${days}d `;
+            if (hours > 0) timeString += `${hours}h `;
+            timeString += `${minutes}m`;
+            
+            timeDisplay.textContent = timeString;
+        }
+    });
+}
+
+// Update countdowns every minute
+setInterval(updateCountdowns, 60000);
+document.addEventListener('DOMContentLoaded', updateCountdowns);
+</script>
+{% endblock %}

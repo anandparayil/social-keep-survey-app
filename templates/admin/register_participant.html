@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Register Participant - Social Keep{% endblock %}
+
+{% block content %}
+<div class="survey-form">
+    <div class="card">
+        <div class="card-header">
+            <h1 class="card-title">
+                <i class="fas fa-user-plus"></i> Register New Participant
+            </h1>
+        </div>
+
+        <form id="participant-form" method="post" action="{{ url_for('register_participant') }}">
+            <div class="form-group">
+                <label for="name" class="form-label">Full Name</label>
+                <input type="text" id="name" name="name" class="form-control"
+                       placeholder="Enter participant name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email" class="form-label">Email Address</label>
+                <input type="email" id="email" name="email" class="form-control"
+                       placeholder="Enter participant email" required>
+            </div>
+
+            <div class="form-actions">
+                <button type="button" class="btn btn-primary" onclick="registerParticipant()">
+                    <i class="fas fa-user-check"></i> Register Participant
+                </button>
+                <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/register_participant.js') }}"></script>
+{% endblock %}

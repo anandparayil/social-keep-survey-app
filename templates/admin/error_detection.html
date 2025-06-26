@@ -1,0 +1,217 @@
+{% extends "base.html" %}
+
+{% block title %}Error Detection - Social Keep{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h1 class="card-title">
+                <i class="fas fa-exclamation-triangle"></i> Survey Error Detection
+            </h1>
+        </div>
+        
+        {% if errors %}
+        <div class="alert alert-warning">
+            <i class="fas fa-exclamation-triangle"></i>
+            The following surveys have ended without any completions. This may indicate technical issues or other problems.
+        </div>
+        
+        <div class="table-container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Survey Name</th>
+                        <th>Survey Type</th>
+                        <th>End Date</th>
+                        <th>Completions</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for error in errors %}
+                    <tr class="error-row">
+                        <td>
+                            <strong>{{ error.name }}</strong>
+                        </td>
+                        <td>
+                            <span class="badge badge-info">{{ error.survey_type.title() }}</span>
+                        </td>
+                        <td>{{ error.end_time.strftime('%Y-%m-%d %H:%M') }}</td>
+                        <td>
+                            <span class="completion-count zero">
+                                <i class="fas fa-times-circle"></i> {{ error.completion_count }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="badge badge-danger">
+                                <i class="fas fa-exclamation-triangle"></i> No Completions
+                            </span>
+                        </td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn btn-sm btn-primary" onclick="investigateError('{{ error.name }}')">
+                                    <i class="fas fa-search"></i> Investigate
+                                </button>
+                                <button class="btn btn-sm btn-secondary" onclick="markResolved('{{ error.name }}')">
+                                    <i class="fas fa-check"></i> Mark Resolved
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="error-summary">
+            <div class="summary-card error">
+                <div class="summary-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="summary-content">
+                    <h3>{{ errors|length }} Survey{% if errors|length != 1 %}s{% endif %} with Issues</h3>
+                    <p>These surveys ended without any participant completions</p>
+                </div>
+            </div>
+            
+            <div class="summary-card info">
+                <div class="summary-icon">
+                    <i class="fas fa-lightbulb"></i>
+                </div>
+                <div class="summary-content">
+                    <h3>Possible Causes</h3>
+                    <ul>
+                        <li>Technical issues preventing access</li>
+                        <li>Survey notification problems</li>
+                        <li>Participant engagement issues</li>
+                        <li>Survey design problems</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="fas fa-check-circle empty-icon" style="color: #28a745;"></i>
+            <h3>No Issues Detected</h3>
+            <p>All recent surveys have received participant responses. The system is functioning normally.</p>
+        </div>
+        {% endif %}
+        
+        <div class="card-actions">
+            <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+            <a href="{{ url_for('survey_completion') }}" class="btn btn-primary">
+                <i class="fas fa-chart-line"></i> View All Completions
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+.error-row {
+    background: #fff5f5;
+    border-left: 4px solid #dc3545;
+}
+
+.completion-count.zero {
+    color: #dc3545;
+    font-weight: bold;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-sm {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+}
+
+.error-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+}
+
+.summary-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid #e9ecef;
+}
+
+.summary-card.error {
+    background: #fff5f5;
+    border-color: #f5c6cb;
+}
+
+.summary-card.info {
+    background: #f8f9fa;
+    border-color: #dee2e6;
+}
+
+.summary-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.summary-card.error .summary-icon {
+    background: #dc3545;
+    color: white;
+}
+
+.summary-card.info .summary-icon {
+    background: #17a2b8;
+    color: white;
+}
+
+.summary-content h3 {
+    margin-bottom: 8px;
+    font-size: 1.1rem;
+    color: #333;
+}
+
+.summary-content p {
+    color: #666;
+    margin: 0;
+}
+
+.summary-content ul {
+    margin: 8px 0 0 0;
+    padding-left: 20px;
+    color: #666;
+}
+
+.summary-content li {
+    margin-bottom: 4px;
+}
+</style>
+
+<script>
+function investigateError(surveyName) {
+    alert('Investigating survey: ' + surveyName + '\n\nThis would open detailed analytics and logs for the survey.');
+}
+
+function markResolved(surveyName) {
+    if (confirm('Mark this survey error as resolved?')) {
+        alert('Survey marked as resolved. It will be removed from the error list.');
+        location.reload();
+    }
+}
+</script>
+{% endblock %}

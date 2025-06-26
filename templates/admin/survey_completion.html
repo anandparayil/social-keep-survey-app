@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}Survey Completion - Social Keep{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h1 class="card-title">
+                <i class="fas fa-chart-line"></i> Survey Completion Tracking
+            </h1>
+        </div>
+        
+        {% if completions %}
+        <div class="table-container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Survey Name</th>
+                        <th>Participant</th>
+                        <th>Completion Date</th>
+                        <th>Tokens Earned</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for completion in completions %}
+                    <tr>
+                        <td>
+                            <strong>{{ completion.survey_name }}</strong>
+                        </td>
+                        <td>
+                            <div class="user-info">
+                                <i class="fas fa-user"></i>
+                                {{ completion.username }}
+                            </div>
+                        </td>
+                        <td>{{ completion.completed_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                        <td>
+                            {% if completion.tokens_earned > 0 %}
+                            <span class="token-amount">
+                                <i class="fas fa-coins"></i> {{ completion.tokens_earned }}
+                            </span>
+                            {% else %}
+                            <span class="text-muted">No reward</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <span class="badge badge-success">
+                                <i class="fas fa-check"></i> Completed
+                            </span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="fas fa-chart-line empty-icon"></i>
+            <h3>No Completions Yet</h3>
+            <p>No surveys have been completed yet.</p>
+        </div>
+        {% endif %}
+        
+        <div class="card-actions">
+            <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

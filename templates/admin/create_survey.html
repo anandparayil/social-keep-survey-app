@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}Create Survey - Social Keep{% endblock %}
+
+{% block content %}
+<div class="survey-form">
+    <div class="card">
+        <div class="card-header">
+            <h1 class="card-title">
+                <i class="fas fa-plus-circle"></i> Create New Survey
+            </h1>
+        </div>
+        
+        <form id="survey-form">
+            <div class="form-group">
+                <label for="survey_name" class="form-label">Survey Name</label>
+                <input type="text" id="survey_name" name="survey_name" class="form-control" 
+                       placeholder="Enter survey name" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="survey_type" class="form-label">Survey Type</label>
+                <select id="survey_type" name="survey_type" class="form-select" required>
+                    <option value="">Select survey type</option>
+                    <option value="daily">Daily Survey (24 hours)</option>
+                    <option value="biweekly">Biweekly Survey (1 week)</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="reward_tokens" class="form-label">Reward Tokens (Optional)</label>
+                <input type="number" id="reward_tokens" name="reward_tokens" class="form-control" 
+                       placeholder="Enter reward tokens" min="0">
+            </div>
+            
+            <div class="form-group">
+                <label for="start_time" class="form-label">Start Time (Optional - Leave empty for immediate start)</label>
+                <input type="datetime-local" id="start_time" name="start_time" class="form-control">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Survey Questions</label>
+                <div id="questions-container"></div>
+                <button type="button" class="add-question-btn" onclick="addQuestion()">
+                    <i class="fas fa-plus"></i> Add Question
+                </button>
+            </div>
+            
+            <div class="form-actions">
+                <button type="button" class="btn btn-primary" onclick="createSurvey()">
+                    <i class="fas fa-save"></i> Create Survey
+                </button>
+                <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/survey.js') }}"></script>
+{% endblock %}

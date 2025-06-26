@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: keep-social
+    env: python
+    buildCommand: ""
+    startCommand: gunicorn app:app
+    plan: free
+    envVars:
+      - key: MYSQL_HOST
+        value: your-db-host
+      - key: MYSQL_USER
+        value: your-db-user
+      - key: MYSQL_PASSWORD
+        value: your-db-pass
+      - key: MYSQL_DB
+        value: your-db-name
+      - key: MAIL_USERNAME
+        value: your-email@gmail.com
+      - key: MAIL_PASSWORD
+        value: your-email-password
