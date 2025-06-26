@@ -36,7 +36,7 @@
 - **Backend**: Python (Flask)
 - **Database**: MySQL
 - **Email Service**: SMTP (for password delivery)
-- **Utilities**: Token-based session management, datetime scheduling logic
+- **Utilities**: Token-based session management, datetime scheduling logic and etc
 
 ---
 
