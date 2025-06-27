@@ -11,15 +11,6 @@ from utils.email import send_credentials_email
 import secrets
 import socket
 
-@app.route('/test-db-connection')
-def test_db_connection():
-    try:
-        socket.gethostbyname("public-keep-social-keep-social.c.aivencloud.com")
-        return "DNS resolution ✅"
-    except Exception as e:
-        return f"DNS error: {e}"
-
-
 app = Flask(__name__)
 app.config.from_object(Config)
 
@@ -82,6 +73,14 @@ def update_survey_status():
             connection.close()
     except Exception as e:
         print(f"Error updating survey status: {e}")
+
+@app.route('/test-db-connection')
+def test_db_connection():
+    try:
+        socket.gethostbyname("public-keep-social-keep-social.c.aivencloud.com")
+        return "DNS resolution ✅"
+    except Exception as e:
+        return f"DNS error: {e}"
 
 # Schedule survey status updates every minute
 scheduler.add_job(func=update_survey_status, trigger="interval", minutes=1)
