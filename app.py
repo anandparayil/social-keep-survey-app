@@ -25,8 +25,10 @@ def get_db_connection():
         user=app.config['MYSQL_USER'],
         password=app.config['MYSQL_PASSWORD'],
         database=app.config['MYSQL_DB'],
+        port=app.config['MYSQL_PORT'],
         charset='utf8mb4',
         cursorclass=pymysql.cursors.DictCursor
+        ssl={'ssl': {}}
     )
 
 def login_required(f):
