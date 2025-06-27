@@ -27,7 +27,7 @@ def get_db_connection():
         database=app.config['MYSQL_DB'],
         port=app.config['MYSQL_PORT'],
         charset='utf8mb4',
-        cursorclass=pymysql.cursors.DictCursor
+        cursorclass=pymysql.cursors.DictCursor,
         ssl={'ssl': {}}
     )
 
