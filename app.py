@@ -9,6 +9,16 @@ from apscheduler.schedulers.background import BackgroundScheduler
 import atexit
 from utils.email import send_credentials_email  
 import secrets
+import socket
+
+@app.route('/test-db-connection')
+def test_db_connection():
+    try:
+        socket.gethostbyname("public-keep-social-keep-social.c.aivencloud.com")
+        return "DNS resolution ✅"
+    except Exception as e:
+        return f"DNS error: {e}"
+
 
 app = Flask(__name__)
 app.config.from_object(Config)
