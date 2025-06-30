@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}View Responses - Social Keep{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h1 class="card-title">
+                <i class="fas fa-chart-line"></i> Participant Responses
+            </h1>
+        </div>
+
+    {% if responses %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Survey</th>
+                <th>Question</th>
+                <th>Answer</th>
+                <th>Selected Options</th>
+                <th>Completed At</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for r in responses %}
+            <tr>
+                <td>{{ r.username }}</td>
+                <td>{{ r.survey_name }}</td>
+                <td>{{ r.question_text }}</td>
+                <td>{{ r.response_text if r.response_text else '—' }}</td>
+                <td>
+                    {% if r.selected_options %}
+                        {{ r.selected_options | tojson | safe }}
+                    {% else %}
+                        —
+                    {% endif %}
+                </td>
+                <td>{{ r.completed_at.strftime('%Y-%m-%d %H:%M') }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        <p>No responses have been submitted yet.</p>
+    {% endif %}
+</div>
+{% endblock %}

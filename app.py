@@ -295,6 +295,38 @@ def track_activation():
     finally:
         connection.close()
 
+@app.route('/admin/delete-participant/<participant_email>', methods=['POST'])
+@login_required
+@admin_required
+def delete_participant(participant_email):
+    conn = get_db_connection()
+    try:
+        with conn.cursor() as cursor:
+            # Step 1: Get participant ID from email
+            cursor.execute("SELECT id FROM users WHERE email = %s AND user_type = 'participant'", (participant_email,))
+            result = cursor.fetchone()
+            if not result:
+                flash("Participant not found.", "danger")
+                return redirect(url_for('track_activation'))
+
+            participant_id = result['id']
+
+            # Step 2: Delete related data
+            cursor.execute("DELETE FROM survey_responses WHERE participant_id = %s", (participant_id,))
+            cursor.execute("DELETE FROM survey_completions WHERE participant_id = %s", (participant_id,))
+            cursor.execute("DELETE FROM payout_details WHERE participant_id = %s", (participant_id,))
+            cursor.execute("DELETE FROM users WHERE id = %s", (participant_id,))
+
+            conn.commit()
+            flash("Participant and all related data have been removed.", "success")
+    except Exception as e:
+        conn.rollback()
+        flash(f"Error deleting participant: {str(e)}", "danger")
+    finally:
+        conn.close()
+
+    return redirect(url_for('track_activation'))
+
 @app.route('/admin/survey_completion')
 @login_required
 @admin_required
@@ -333,6 +365,26 @@ def pending_surveys():
             """)
             pending = cursor.fetchall()
             return render_template('admin/pending_surveys.html', pending=pending)
+    finally:
+        connection.close()
+
+@app.route('/admin/view_responses')
+@login_required
+@admin_required
+def view_responses():
+    connection = get_db_connection()
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute("""
+                SELECT u.username, s.name AS survey_name, sq.question_text, sr.response_text, sr.selected_options, sr.completed_at
+                FROM survey_responses sr
+                JOIN users u ON sr.participant_id = u.id
+                JOIN surveys s ON sr.survey_id = s.id
+                JOIN survey_questions sq ON sr.question_id = sq.id
+                ORDER BY sr.completed_at DESC
+            """)
+            responses = cursor.fetchall()
+            return render_template('admin/view_responses.html', responses=responses)
     finally:
         connection.close()
 

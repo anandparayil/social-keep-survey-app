@@ -58,6 +58,11 @@
                                 <i class="fas fa-clock"></i> Pending
                             </span>
                             {% endif %}
+                            <form method="POST" action="{{ url_for('delete_participant', participant_email=participant.email) }}" style="display:inline;" onsubmit="return confirm('Are you sure you want to remove this participant and delete all their data?');">
+                                <button type="submit" class="btn btn-danger btn-sm" title="Remove Participant">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </form>
                         </td>
                     </tr>
                     {% endfor %}
@@ -97,5 +102,20 @@
 .user-info i {
     color: #667eea;
 }
+
+.btn-danger.btn-sm {
+    padding: 4px 8px;
+    font-size: 0.8rem;
+    margin-left: 10px;
+    background-color: #e3342f;
+    border: none;
+    border-radius: 4px;
+    color: white;
+}
+
+.btn-danger.btn-sm:hover {
+    background-color: #cc1f1a;
+}
+
 </style>
 {% endblock %}
