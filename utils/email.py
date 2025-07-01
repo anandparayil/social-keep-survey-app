@@ -13,7 +13,7 @@ def send_password_reset_email(email, reset_token):
     """Send password reset email with secure link"""
     try:
         subject = "Social Keep - Password Reset Request"
-        base_url = current_app.config.get('BASE_URL', 'http://localhost:5000')
+        base_url = current_app.config.get('BASE_URL', 'https://keep-social-production-8b81.up.railway.app/')
 
         html_body = f"""
         <html>
@@ -49,7 +49,7 @@ def send_survey_notification(email, survey_name, survey_type):
     """Notify user about a new survey"""
     try:
         subject = f"New Survey Available: {survey_name}"
-        base_url = current_app.config.get('BASE_URL', 'http://localhost:5000')
+        base_url = current_app.config.get('BASE_URL', 'https://keep-social-production-8b81.up.railway.app/')
         duration = "24 hours" if survey_type == "daily" else "1 week"
 
         html_body = f"""
@@ -84,7 +84,7 @@ def send_credentials_email(email, username, password):
     """Send initial login credentials to new participant"""
     try:
         subject = "Your Social Keep Account Credentials"
-        base_url = current_app.config.get('BASE_URL', 'http://localhost:5000')
+        base_url = current_app.config.get('BASE_URL', 'https://keep-social-production-8b81.up.railway.app/')
 
         html_body = f"""
         <html>
